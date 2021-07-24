@@ -1,4 +1,3 @@
-#include "catch.hpp"
 #include <variant>
 
 namespace {
@@ -40,11 +39,3 @@ static_assert(VisitHelper(TestVariant{1}, HandleBool, HandleInt) == 1);
 static_assert(VisitHelper(TestVariant{101}, HandleBool, HandleInt) == 999);
 static_assert(VisitHelper(TestVariant{false}, HandleBool, HandleInt) == 222);
 static_assert(VisitHelper(TestVariant{true}, HandleBool, HandleInt) == 111);
-
-TEST_CASE("visitor") {
-	CHECK(VisitHelper(TestVariant{1}, HandleBool, HandleInt) == 1);
-	CHECK(VisitHelper(TestVariant{101}, HandleBool, HandleInt) == 999);
-	CHECK(VisitHelper(TestVariant{false}, HandleBool, HandleInt) == 222);
-	CHECK(VisitHelper(TestVariant{true}, HandleBool, HandleInt) == 111);
-}
-
