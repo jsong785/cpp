@@ -20,14 +20,15 @@ private:
 template <typename F>
 class FuncWrap<F, std::enable_if_t<std::is_pointer_v<std::decay_t<F>>>> {
 public:
-  constexpr explicit FuncWrap(const std::decay_t<F> f) : m_wrap{f} {}
+  using FuncPtr = std::decay_t<F>;
+  constexpr explicit FuncWrap(const FuncPtr f) : m_wrap{f} {}
 
   template <typename Val> constexpr auto operator()(Val &&val) {
     return m_wrap(std::forward<Val>(val));
   }
 
 private:
-  const std::decay_t<F> m_wrap{};
+  const FuncPtr m_wrap{};
 };
 
 template <typename Val, typename Func>
