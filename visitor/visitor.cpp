@@ -2,8 +2,7 @@
 
 namespace {
 
-template <typename... T>
-static constexpr auto is_variant_v = false;
+template <typename... T> static constexpr auto is_variant_v = false;
 
 template <typename... T>
 static constexpr auto is_variant_v<std::variant<T...>> = true;
@@ -11,27 +10,27 @@ static constexpr auto is_variant_v<std::variant<T...>> = true;
 static_assert(!is_variant_v<bool, int>);
 static_assert(is_variant_v<std::variant<bool, int>>);
 
-template <typename... Callables>
-struct overload : Callables... {
-	using Callables::operator()...;
+template <typename... Callables> struct overload : Callables... {
+  using Callables::operator()...;
 };
 
 template <typename... Callables>
 overload(Callables...) -> overload<Callables...>;
 
-}
+} // namespace
 
 template <typename Variant, typename... Visitors>
-static constexpr auto VisitHelper(Variant&& variant, Visitors&&... visitors) {
-	return std::visit(overload{ std::forward<Visitors>(visitors)... }, std::forward<Variant>(variant));
+static constexpr auto VisitHelper(Variant &&variant, Visitors &&...visitors) {
+  return std::visit(overload{std::forward<Visitors>(visitors)...},
+                    std::forward<Variant>(variant));
 }
 
 static constexpr auto HandleBool = [](const bool val) noexcept {
-	return val ? 111 : 222;
+  return val ? 111 : 222;
 };
 
 static constexpr auto HandleInt = [](const int val) noexcept {
-	return val < 100 ? 1 : 999;
+  return val < 100 ? 1 : 999;
 };
 
 using TestVariant = std::variant<int, bool>;
