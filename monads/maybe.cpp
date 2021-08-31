@@ -35,7 +35,7 @@ static_assert(std::is_same_v<const std::string &,
 
 template <typename T> using Maybe = std::optional<T>;
 
-template <typename T> constexpr Maybe<T> Just(T &&t) { return {std::move(t)}; }
+template <typename T> constexpr Maybe<T> Just(T &&t) { return {std::forward<T>(t)}; }
 
 template <typename T> constexpr Maybe<T> Nothing() { return std::nullopt; }
 
