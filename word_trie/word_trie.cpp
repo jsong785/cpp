@@ -118,5 +118,20 @@ TEST_CASE("add") {
 
     dic.remove("hello");
     REQUIRE(dic.count() == 0);
+
+    dic.add("日本語");
+    REQUIRE(dic.count() == 1);
+
+    dic.add("日本人");
+    REQUIRE(dic.count() == 2);
+
+    dic.remove("日本");
+    REQUIRE(dic.count() == 2);
+
+    CHECK(dic.lookup("日本") == std::vector<std::string>{ "日本語", "日本人" });
+
+    dic.remove("日本人");
+    CHECK(dic.lookup("日本") == std::vector<std::string>{ "日本語" });
+    CHECK(dic.count() == 1);
 }
 
