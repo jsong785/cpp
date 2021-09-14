@@ -48,6 +48,25 @@ parseOperation(const std::string_view equation) {
   return {Operation::divide, 1};
 }
 
+static void doAction(const Operation op, const double num,
+                     std::stack<double> &values) {
+  if (op == internal::Operation::add) {
+    values.emplace(num);
+  } else if (op == internal::Operation::substract) {
+    values.emplace(-num);
+  } else if (op == internal::Operation::multiply) {
+    const auto n = values.top();
+    values.pop();
+    values.emplace(n * num);
+  } else if (op == internal::Operation::divide) {
+    const auto n = values.top();
+    values.pop();
+    values.emplace(n / num);
+  } else {
+    values.emplace(num);
+  }
+}
+
 } // namespace internal
 
 static std::pair<double, std::size_t>
@@ -69,40 +88,11 @@ double calculate(const std::string_view equation) {
       const auto [num, increment] =
           internal::parseDigit({equation.cbegin() + i});
       i += increment;
-
-      if (lastOperation == internal::Operation::add) {
-        values.emplace(num);
-      } else if (lastOperation == internal::Operation::substract) {
-        values.emplace(-num);
-      } else if (lastOperation == internal::Operation::multiply) {
-        const auto n = values.top();
-        values.pop();
-        values.emplace(n * num);
-      } else if (lastOperation == internal::Operation::divide) {
-        const auto n = values.top();
-        values.pop();
-        values.emplace(n / num);
-      } else {
-        values.emplace(num);
-      }
+      internal::doAction(lastOperation, num, values);
     } else if (c == '(') {
       const auto [num, increment] = calculateParen({equation.cbegin() + i});
       i += increment;
-      if (lastOperation == internal::Operation::add) {
-        values.emplace(num);
-      } else if (lastOperation == internal::Operation::substract) {
-        values.emplace(-num);
-      } else if (lastOperation == internal::Operation::multiply) {
-        const auto n = values.top();
-        values.pop();
-        values.emplace(n * num);
-      } else if (lastOperation == internal::Operation::divide) {
-        const auto n = values.top();
-        values.pop();
-        values.emplace(n / num);
-      } else {
-        values.emplace(num);
-      }
+      internal::doAction(lastOperation, num, values);
     } else {
       const auto [op, increment] =
           internal::parseOperation({equation.cbegin() + i});
