@@ -64,6 +64,9 @@ static constexpr bool test() {
   };
 
   // clang-format off
+  // []
+  // [0]
+  // [1, 0]
   // [2, 1, 0]
   EXPECT_SIZE(0);
   EXPECT_PUSH(0, true); EXPECT_SIZE(1);
