@@ -62,34 +62,37 @@ static constexpr bool test() {
   const auto pop = [&queue](const std::optional<int> expected) constexpr {
     return queue.pop() == expected;
   };
+
+  // clang-format off
+  // [2, 1, 0]
   EXPECT_SIZE(0);
-  EXPECT_PUSH(0, true);
-  EXPECT_SIZE(1);
-  EXPECT_PUSH(1, true);
-  EXPECT_SIZE(2);
-  EXPECT_PUSH(2, true);
-  EXPECT_SIZE(3);
+  EXPECT_PUSH(0, true); EXPECT_SIZE(1);
+  EXPECT_PUSH(1, true); EXPECT_SIZE(2);
+  EXPECT_PUSH(2, true); EXPECT_SIZE(3);
 
-  EXPECT_POP(0);
-  EXPECT_SIZE(2);
-  EXPECT_POP(1);
-  EXPECT_SIZE(1);
+  // [2, 1, 0]
+  // [2, 1]
+  // [2]
+  EXPECT_POP(0); EXPECT_SIZE(2);
+  EXPECT_POP(1); EXPECT_SIZE(1);
 
-  EXPECT_PUSH(0, true);
-  EXPECT_SIZE(2);
-  EXPECT_PUSH(0, true);
-  EXPECT_SIZE(3);
-  EXPECT_PUSH(0, false);
-  EXPECT_SIZE(3);
+  // [2]
+  // [0, 2]
+  // [0, 0, 2]
+  EXPECT_PUSH(0, true); EXPECT_SIZE(2);
+  EXPECT_PUSH(0, true); EXPECT_SIZE(3);
+  EXPECT_PUSH(0, false); EXPECT_SIZE(3);
 
-  EXPECT_POP(2);
-  EXPECT_SIZE(2);
-  EXPECT_POP(0);
-  EXPECT_SIZE(1);
-  EXPECT_POP(0);
-  EXPECT_SIZE(0);
+  // [0, 0, 2]
+  // [0, 0]
+  // [0]
+  // []
+  EXPECT_POP(2); EXPECT_SIZE(2);
+  EXPECT_POP(0); EXPECT_SIZE(1);
+  EXPECT_POP(0); EXPECT_SIZE(0);
   EXPECT_POP_NULL();
   EXPECT_SIZE(0);
+  // clang-format on
 
   return true;
 }
