@@ -54,7 +54,7 @@ constexpr Ret MBind(Maybe<T> ma, Func f) {
   if (!ma) {
     return std::nullopt;
   }
-  return f(std::move(*ma));
+  return std::invoke(f, std::move(*ma));
 }
 
 template <typename T, typename Func>
